@@ -5,6 +5,10 @@ command! -buffer -nargs=0 GhciLoad call s:load()
 command! -buffer -nargs=1 GhciModule call s:module(<q-args>)
 command! -buffer -nargs=+ GhciSend call s:send(<q-args>)
 
+nnoremap <buffer> <silent> <LocalLeader>t :<C-u>GhciType<CR>
+nnoremap <buffer> <silent> <LocalLeader>i :<C-u>GhciInfo<CR>
+nnoremap <buffer> <silent> <LocalLeader>l :<C-u>GhciLoad<CR>
+
 augroup ghci
   autocmd!
   autocmd VimLeave * call ghci#quit()
