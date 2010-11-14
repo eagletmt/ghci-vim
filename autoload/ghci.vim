@@ -11,6 +11,9 @@ function! ghci#init()"{{{
   " set prompt for convenience
   call s:ghci.stdin.write(":set prompt >\n")
   call s:read_until_prompt(s:ghci, '>')
+  " force recompile
+  call s:ghci.stdin.write(":set -fforce-recomp\n")
+  call s:read_until_prompt(s:ghci, '>')
 endfunction"}}}
 
 function! ghci#quit()"{{{
