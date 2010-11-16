@@ -1,4 +1,5 @@
 let s:ghci = {'is_valid': 0}
+let s:ghc_version = []
 
 function! ghci#init()"{{{
   if has_key(s:ghci, 'kill')
@@ -6,7 +7,8 @@ function! ghci#init()"{{{
     call s:ghci.kill(15)
   endif
   let s:ghci = vimproc#popen2(['ghci'])
-  call s:read_until_prompt(s:ghci, 'Prelude> ')
+  let l:output = s:read_until_prompt(s:ghci, 'Prelude> ')
+  let s:ghc_version = matchlist(l:output, 'version \(\d\+\)\.\(\d\+\)\.\(\d\+\)')[1:3]
 
   " set prompt for convenience
   call s:ghci.stdin.write(":set prompt >\n")
@@ -76,7 +78,14 @@ function! ghci#load(path)"{{{
       return [0, l:output]
     else
       " ignore 'Compiling' message
-      call s:read_error(l:ghci)
+      if s:ghc_version[0] >= 7
+        " GHC 7 send message to stdout
+        let l:lines = split(l:output, '\n')
+        call filter(l:lines, printf("v:val !~# '%s'", '^\[\d\+\s\+of\s\+\d\+\]\s\+Compiling\s'))
+        let l:output = join(l:lines, "\n")
+      else
+        call s:read_error(l:ghci)
+      endif
       return [1, l:output]
     endif
   else
