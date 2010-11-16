@@ -3,7 +3,7 @@ let s:ghci = {'is_valid': 0}
 function! ghci#init()"{{{
   if has_key(s:ghci, 'kill')
     " kill SIGTERM
-    call g:ghci_proc.kill(15)
+    call s:ghci.kill(15)
   endif
   let s:ghci = vimproc#popen2(['ghci'])
   call s:read_until_prompt(s:ghci, 'Prelude> ')
