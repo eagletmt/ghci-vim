@@ -6,7 +6,7 @@ function! ghci#init()"{{{
     " kill SIGTERM
     call s:ghci.kill(15)
   endif
-  let s:ghci = vimproc#popen2(['ghci'])
+  let s:ghci = vimproc#popen3(['ghci'])
   let l:output = s:read_until_prompt(s:ghci, 'Prelude> ')
   let s:ghc_version = matchlist(l:output, 'version \(\d\+\)\.\(\d\+\)\.\(\d\+\)')[1:3]
 
